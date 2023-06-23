@@ -18,11 +18,12 @@ export const SignUp = (props) => {
     e.preventDefault()
     // console.log('form submitted')
     // console.log(name, email, password)
-    createUserWithEmailAndPassword(auth, email, password).then(() => {
+    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
         addDoc(collection(db, 'SignedUpUserData'), {
             Name: name,
             Email: email,
-            Password: password
+            Password: password,
+            Uid: userCredential.user.uid
         }).then(() => {
             setName('')
             setEmail('')

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { storage, db } from '../config/config'
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { collection, addDoc } from 'firebase/firestore'
 
 export const AddProducts = () => {
@@ -15,8 +15,12 @@ export const AddProducts = () => {
     const productImgHandler = (e) => {
         let selectedFile = e.target.files[0];
         if (selectedFile && types.includes(selectedFile.type)) {
-            setProductImg(selectedFile);
-            setError('')
+            const storage = getStorage()
+            const storageRef = ref(storage, `product-images/${selectedFile.name}`)
+            uploadBytes(storageRef, selectedFile).then(() => {
+                setProductImg(selectedFile);
+                setError('')
+            })
         }
         else {
             setProductImg(null);
@@ -27,27 +31,22 @@ export const AddProducts = () => {
     // add product
     const addProduct = (e) => {
         e.preventDefault();
-        const uploadTask = uploadBytesResumable(ref(storage, `product-images/${productImg.name}`))
-        uploadTask.on('state_changed', snapshot => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(progress);
-        }, err => setError(err.message)
-            , () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(url => {
-                    addDoc(collection(db, 'Products'), {
-                        ProductName: productName,
-                        ProductPrice: Number(productPrice),
-                        ProductImg: url
-                    }).then(() => {
-                        setProductName('');
-                        setProductPrice(0)
-                        setProductImg('');
-                        setError('');
-                        document.getElementById('file').value = '';
-                    }).catch(err => setError(err.message))
-                })
-            })
+        const storage = getStorage()
+        getDownloadURL(ref(storage, `product-images/${productImg.name}`)).then((url) => {
+            addDoc(collection(db, 'Products'), {
+            ProductName: productName,
+            ProductPrice: Number(productPrice),
+            ProductImg: url
+            }).then(() => {
+                setProductName('');
+                setProductPrice(0)
+                setProductImg('');
+                setError('');
+                document.getElementById('file').value = '';
+            }).catch(err => setError(err.message))
+        })
     }
+        
 
     return (
         <div className='container'>
@@ -70,6 +69,7 @@ export const AddProducts = () => {
                 <button type="submit" className='btn btn-success btn-md mybtn'>ADD</button>
             </form>
             {error && <span className='error-msg'>{error}</span>}
+            {productImg && <img src={URL.createObjectURL(productImg)} alt='Preview' />}
         </div>
     )
 }

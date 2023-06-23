@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
 import { db } from "../config/config";
-import { collection, onSnapshot, query, setDoc } from "firebase/firestore";
+import { collection, onSnapshot, query } from "firebase/firestore";
 
 export const ProductsContext = createContext();
 

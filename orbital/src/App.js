@@ -10,6 +10,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { where, query, getDocs, collection } from "firebase/firestore";
 import { CartContextProvider } from "./global/CartContext";
 import { Cart } from "./components/Cart";
+import { Cashout } from "./components/Cashout";
 
 export class App extends Component {
     state = {
@@ -45,7 +46,9 @@ export class App extends Component {
                                 <Route path="/addproducts" element={<AddProducts />}></Route>
                                 <Route path="/signup" element={<SignUp />}></Route>
                                 <Route path="/login" element={<Login />}></Route>
-                                <Route path="/cartproducts" element={<Cart user={this.state.user}/>}></Route>
+                                <Route path="/cartproducts" element={<Cart user={this.state.user} />}></Route>
+                                <Route path="/addproducts" element={<AddProducts />}></Route>
+                                <Route path="/cashout" element={<Cashout user={this.state.user} />}></Route>
                             </Routes>
                         </BrowserRouter>
                     </CartContextProvider>

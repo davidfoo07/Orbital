@@ -5,19 +5,20 @@ import { Icon } from "react-icons-kit";
 import { ic_add } from "react-icons-kit/md/ic_add";
 import { ic_remove } from "react-icons-kit/md/ic_remove";
 import { iosTrashOutline } from "react-icons-kit/ionicons/iosTrashOutline";
-import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../config/config";
+import { onAuthStateChanged } from "firebase/auth";
+import "../css/Home.css"
 
 export const Cart = ({ user }) => {
     const { shoppingCart, dispatch, totalPrice, totalQty } = useContext(CartContext);
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        auth.onAuthStateChanged((user) => {
+        onAuthStateChanged(auth, (user) => {
             if (!user) {
-                history.push("/login");
+                navigate("/login");
             }
         });
     });
@@ -45,7 +46,7 @@ export const Cart = ({ user }) => {
 
                                 <div className="cart-name">{cart.ProductName}</div>
 
-                                <div className="cart-price-orignal">Rs {cart.ProductPrice}.00</div>
+                                <div className="cart-price-orignal">RM {cart.ProductPrice}.00</div>
 
                                 <div className="inc" onClick={() => dispatch({ type: "INC", id: cart.ProductID, cart })}>
                                     <Icon icon={ic_add} size={24} />
@@ -57,7 +58,7 @@ export const Cart = ({ user }) => {
                                     <Icon icon={ic_remove} size={24} />
                                 </div>
 
-                                <div className="cart-price">Rs {cart.TotalProductPrice}.00</div>
+                                <div className="cart-price">RM {cart.TotalProductPrice}.00</div>
 
                                 <button className="delete-btn" onClick={() => dispatch({ type: "DELETE", id: cart.ProductID, cart })}>
                                     <Icon icon={iosTrashOutline} size={24} />
@@ -75,11 +76,9 @@ export const Cart = ({ user }) => {
                                 <span>Total Qty</span>
                                 <span>{totalQty}</span>
                             </div>
-                            <Link to="cashout" className="cashout-link">
-                                <button className="btn btn-success btn-md" style={{ marginTop: 5 + "px" }}>
-                                    Cash on delivery
-                                </button>
-                            </Link>
+                            <button className="btn btn-success btn-md" style={{ marginTop: 5 + "px" }} onClick={() => navigate('/cashout')}>
+                                Cash on delivery
+                            </button>
                         </div>
                     )}
                 </div>
