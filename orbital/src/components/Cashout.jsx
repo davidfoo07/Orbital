@@ -8,9 +8,9 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { addDoc, query, collection, getDocs, where } from 'firebase/firestore'
 
 
-export const Cashout = (props) => {
+export const Cashout = ({user}) => {
     
-    const { totalPrice, totalQty, dispatch } = useContext(CartContext)
+    const { shoppingCart, totalPrice, totalQty, dispatch } = useContext(CartContext)
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -38,34 +38,35 @@ export const Cashout = (props) => {
 
     const cashoutSubmit = (e) => {
         e.preventDefault()
-        onAuthStateChanged(auth, async (user) => {
-            const date = new Date()
-            const time = date.getTime()
-            if (user) {
-                await addDoc(collection(db, 'Buyer-Info ' + user.uid), {
-                    BuyerName: name,
-                    BuyerEmail: email,
-                    BuyerCell: cell,
-                    BuyerAddress: address,
-                    BuyerPayment: totalPrice,
-                    BuyerQuantity: totalQty,
-                }).then(() => {
-                    setCell('')
-                    setAddress('')
-                    dispatch({type: 'EMPTY'})
-                    setSuccessMsg('Your order has been placed successfully! Thank you for shopping on One2sell.')
-                    setTimeout(() => {
-                        navigate('/')
-                    }, 5000)
-                }).catch(err => setError(err.message))
-            }
-        })
+        shoppingCart.map((cart) => (
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    await addDoc(collection(db, 'Buyer-Info ' + user.uid), {
+                        BuyerName: name,
+                        BuyerEmail: email,
+                        BuyerCell: cell,
+                        BuyerAddress: address,
+                        BuyerPayment: totalPrice,
+                        BuyerQuantity: totalQty,
+                    }).then(() => {
+                        setCell('')
+                        setAddress('')
+                        dispatch({ type: "EMPTY", id: cart.ProductID, stock: cart.ProductStock, cart });
+                        setSuccessMsg('Your order has been placed successfully! Thank you for shopping on One2sell.')
+                        setTimeout(() => {
+                            navigate('/')
+                        }, 5000)
+                    }).catch(err => setError(err.message))
+                }
+            })
+        ))
+        
     }
 
 
   return (
     <>
-    <Navbar user={props.user} />
+    <Navbar user={user} />
     <div className='container'>
         <br />
         <h2>Cashout Details</h2>

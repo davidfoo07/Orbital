@@ -1,21 +1,35 @@
-import React, { useState } from 'react'
-import { storage, db } from '../config/config'
-import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage'
+import React, { useState, useEffect } from 'react'
+import { storage, db, auth } from '../config/config'
+import { onAuthStateChanged } from 'firebase/auth'
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { collection, addDoc } from 'firebase/firestore'
+import { Navbar } from './Navbar'
+import { useNavigate } from 'react-router-dom'
 
-export const AddProducts = () => {
+export const AddProducts = ({user}) => {
 
     const [productName, setProductName] = useState('');
     const [productPrice, setProductPrice] = useState(0);
+    const [productStock, setProductStock] = useState(null)
     const [productImg, setProductImg] = useState(null);
     const [error, setError] = useState('');
+    
+    const navigate = useNavigate()
+    
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                navigate("/login");
+            }
+        });
+        console.log(user)
+    });
 
     const types = ['image/png', 'image/jpeg']; // image types
 
     const productImgHandler = (e) => {
         let selectedFile = e.target.files[0];
         if (selectedFile && types.includes(selectedFile.type)) {
-            const storage = getStorage()
             const storageRef = ref(storage, `product-images/${selectedFile.name}`)
             uploadBytes(storageRef, selectedFile).then(() => {
                 setProductImg(selectedFile);
@@ -31,15 +45,16 @@ export const AddProducts = () => {
     // add product
     const addProduct = (e) => {
         e.preventDefault();
-        const storage = getStorage()
         getDownloadURL(ref(storage, `product-images/${productImg.name}`)).then((url) => {
             addDoc(collection(db, 'Products'), {
             ProductName: productName,
             ProductPrice: Number(productPrice),
+            ProductStock: Number(productStock),
             ProductImg: url
             }).then(() => {
                 setProductName('');
                 setProductPrice(0)
+                setProductStock(0)
                 setProductImg('');
                 setError('');
                 document.getElementById('file').value = '';
@@ -50,6 +65,7 @@ export const AddProducts = () => {
 
     return (
         <div className='container'>
+            <Navbar user={user}/>
             <br />
             <h2>ADD PRODUCTS</h2>
             <hr />
@@ -62,6 +78,10 @@ export const AddProducts = () => {
                 <input type="number" className='form-control' required
                     onChange={(e) => setProductPrice(e.target.value)} value={productPrice} />
                 <br />
+                <label htmlFor="product-stock">Product Stock</label>
+                <input type="number" className='form-control' required 
+                    onChange={(e) => setProductStock(e.target.value)} value={productStock}/>
+                    <br />
                 <label htmlFor="product-img">Product Image</label>
                 <input type="file" className='form-control' id="file" required
                     onChange={productImgHandler} />

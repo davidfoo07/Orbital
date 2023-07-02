@@ -43,11 +43,10 @@ export class App extends Component {
                         <BrowserRouter>
                             <Routes>
                                 <Route exact path="/" element={<Home user={this.state.user} />}></Route>
-                                <Route path="/addproducts" element={<AddProducts />}></Route>
                                 <Route path="/signup" element={<SignUp />}></Route>
                                 <Route path="/login" element={<Login />}></Route>
                                 <Route path="/cartproducts" element={<Cart user={this.state.user} />}></Route>
-                                <Route path="/addproducts" element={<AddProducts />}></Route>
+                                <Route path="/addproducts" element={<AddProducts user={this.state.user} />}></Route>
                                 <Route path="/cashout" element={<Cashout user={this.state.user} />}></Route>
                             </Routes>
                         </BrowserRouter>

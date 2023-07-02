@@ -8,6 +8,7 @@ import { iosTrashOutline } from "react-icons-kit/ionicons/iosTrashOutline";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../config/config";
 import { onAuthStateChanged } from "firebase/auth";
+import { ToastContainer } from "react-toastify"
 import "../css/Home.css"
 
 export const Cart = ({ user }) => {
@@ -31,7 +32,10 @@ export const Cart = ({ user }) => {
                 <div className="cart-container">
                     {shoppingCart.length === 0 && (
                         <>
-                            <div>no items in your cart or slow internet causing trouble (Refresh the page) or you are not logged in</div>
+                            <div>
+                                no items in your cart or slow internet causing trouble (Refresh the page) or you are not
+                                logged in
+                            </div>
                             <div>
                                 <Link to="/">Return to Home page</Link>
                             </div>
@@ -39,7 +43,7 @@ export const Cart = ({ user }) => {
                     )}
                     {shoppingCart &&
                         shoppingCart.map((cart) => (
-                            <div className="cart-card" key={cart.ProductID}>
+                            <div className="cart-card" key={cart.id}>
                                 <div className="cart-img">
                                     <img src={cart.ProductImg} alt="not found" />
                                 </div>
@@ -48,21 +52,35 @@ export const Cart = ({ user }) => {
 
                                 <div className="cart-price-orignal">RM {cart.ProductPrice}.00</div>
 
-                                <div className="inc" onClick={() => dispatch({ type: "INC", id: cart.ProductID, cart })}>
+                                <div
+                                    className="inc"
+                                    onClick={() =>
+                                        dispatch({
+                                            type: "INC",
+                                            id: cart.id,
+                                            stock: cart.ProductStock,
+                                            cart,
+                                        })
+                                    }
+                                >
                                     <Icon icon={ic_add} size={24} />
                                 </div>
 
                                 <div className="quantity">{cart.qty}</div>
 
-                                <div className="dec" onClick={() => dispatch({ type: "DEC", id: cart.ProductID, cart })}>
+                                <div className="dec" onClick={() => dispatch({ type: "DEC", id: cart.id, cart })}>
                                     <Icon icon={ic_remove} size={24} />
                                 </div>
 
                                 <div className="cart-price">RM {cart.TotalProductPrice}.00</div>
 
-                                <button className="delete-btn" onClick={() => dispatch({ type: "DELETE", id: cart.ProductID, cart })}>
+                                <button
+                                    className="delete-btn"
+                                    onClick={() => dispatch({ type: "DELETE", id: cart.id, cart })}
+                                >
                                     <Icon icon={iosTrashOutline} size={24} />
                                 </button>
+                                <ToastContainer />
                             </div>
                         ))}
                     {shoppingCart.length > 0 && (
@@ -76,7 +94,11 @@ export const Cart = ({ user }) => {
                                 <span>Total Qty</span>
                                 <span>{totalQty}</span>
                             </div>
-                            <button className="btn btn-success btn-md" style={{ marginTop: 5 + "px" }} onClick={() => navigate('/cashout')}>
+                            <button
+                                className="btn btn-success btn-md"
+                                style={{ marginTop: 5 + "px" }}
+                                onClick={() => navigate("/cashout")}
+                            >
                                 Cash on delivery
                             </button>
                         </div>

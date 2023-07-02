@@ -27,30 +27,35 @@ export class ProductsContextProvider extends React.Component {
 
     state = {
         products: [],
+        loading: true,
     };
 
     componentDidMount() {
-        const prevProducts = this.state.products;
+        //const prevProducts = this.state.products;
         const q = query(collection(db, "Products"));
         onSnapshot(q, (snapshot) => {
-            let changes = snapshot.docChanges();
-            changes.forEach((change) => {
-                if (change.type === "added") {
-                    prevProducts.push({
-                        ProductID: change.doc.id,
-                        ProductName: change.doc.data().ProductName,
-                        ProductPrice: change.doc.data().ProductPrice,
-                        ProductImg: change.doc.data().ProductImg,
-                    });
-                }
-                this.setState({
-                    products: prevProducts
-                })
+            this.setState({
+                products: [],
             });
+            snapshot.forEach((change) => {
+                console.log(change.data().ProductName);
+                var item = change.data();
+                item["ProductID"] = change.id;
+                this.setState((prev) => ({
+                    products: [...prev.products, item],
+                }));
+            });
+        });
+        this.setState({
+            loading: false,
         });
     }
 
     render() {
-        return <ProductsContext.Provider value={{ products: [...this.state.products] }}>{this.props.children}</ProductsContext.Provider>;
+        return (
+            <ProductsContext.Provider value={{ products: this.state.products }}>
+                {!this.state.loading && this.props.children}
+            </ProductsContext.Provider>
+        );
     }
 }
