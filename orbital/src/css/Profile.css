@@ -1,0 +1,203 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    width: 350px;
+    background-color: rgb(255, 251, 251) !important;
+    border: 1px solid lightgrey;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.image img {
+    transition: all 0.5s;
+    height: 140px;
+    width: 140px;
+    border-radius: 70px;
+    object-fit: cover;
+}
+
+.image img:hover {
+    transform: scale(1.25);
+}
+
+.btnP {
+    width: 140px;
+    height: 140px;
+    border-radius: 70px;
+    background-color: #ccc;
+    border: none;
+}
+
+.plus-icon {
+    color: black;
+}
+
+.name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.idd {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.idd1 {
+    font-size: 12px;
+}
+
+.phone {
+    font-size: 15px;
+}
+
+.number {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.follow {
+    font-size: 12px;
+    font-weight: 500;
+    color: #444444;
+}
+
+.btn1 {
+    height: 40px;
+    width: 150px;
+    border: none;
+    background-color: #000;
+    color: #aeaeae;
+    font-size: 15px;
+}
+
+.text span {
+    font-size: 13px;
+    color: #545454;
+    font-weight: 500;
+}
+
+.icons i {
+    font-size: 19px;
+}
+
+hr .new1 {
+    border: 1px solid;
+}
+
+.join {
+    font-size: 14px;
+    color: #7b7777;
+    font-weight: bold;
+}
+
+.date {
+    background-color: #ccc;
+}
+
+.carousel-slider {
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 0 70px;
+    padding-bottom: 30px;
+    background-color: rgb(255, 251, 251);
+    border: 1px solid lightgrey;
+    border-radius: 8px;
+}
+
+.slick-slide > div {
+    margin: 0 10px;
+}
+.slick-list {
+    margin: 0 -10px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    color: black !important;
+}
+
+.card-slide {
+    background: lightgrey;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 400px;
+    min-width: 180px;
+    max-width: 180px;
+    color: black;
+    cursor: pointer;
+    border: 1px solid grey;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-left: 43px;
+}
+
+.add-img-container .card-slide-edit {
+    background: lightgrey;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 140px !important;
+    max-width: 90px !important;
+    min-width: 90px !important;
+    cursor: pointer;
+    border: 1px solid grey;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.card-slide-edit img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-top {
+    width: 100%;
+    max-width: 300px; /* Adjust the maximum width as needed */
+    margin-bottom: 20px;
+}
+
+.card-top h5 {
+    height: 30px;
+    font-size: 1rem;
+    margin: 20px 20px;
+}
+
+.card-top img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-bottom {
+    margin: 0 20px;
+    margin-top: 45px;
+}
+
+.card-bottom h5 {
+    margin: 20px 0;
+}
+
+.category {
+    position: relative;
+}
+.category::before {
+    content: "";
+    background: rgb(255, 61, 61);
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    height: 2px;
+}
+
+.action {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 1;
+}
+.edit-btn {
+}
