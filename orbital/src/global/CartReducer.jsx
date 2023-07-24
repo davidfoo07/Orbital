@@ -4,17 +4,17 @@ import { db } from "../config/config";
 import { deleteDoc, updateDoc, doc } from "firebase/firestore";
 
 export const CartReducer = (state, action) => {
-    const { shoppingCart = [], totalPrice, totalQty} = state;
+    const { shoppingCart, totalPrice, totalQty } = state;
 
     const removeItem = async (id) => {
         await deleteDoc(doc(db, "Products", id));
     };
 
     const updateStock = async (id, stock) => {
-        await updateDoc(doc(db, 'Products', id), {
-            ProductStock: stock
-        })
-    }
+        await updateDoc(doc(db, "Products", id), {
+            ProductStock: stock,
+        });
+    };
 
     let product;
     let index;
@@ -41,7 +41,7 @@ export const CartReducer = (state, action) => {
                     product = action.product;
                     product["qty"] = 1;
                     product["TotalProductPrice"] = product.ProductPrice * product.qty;
-                    product["StockQty"] = product.ProductStock
+                    product["StockQty"] = product.ProductStock;
                     updatedQty = totalQty + 1;
                     updatedPrice = totalPrice + product.ProductPrice;
                     return {
@@ -72,8 +72,8 @@ export const CartReducer = (state, action) => {
                     closeOnClick: true,
                     draggable: false,
                 });
-                updatedQty = action.stock;
-                updatedPrice = action.stock * product.ProductPrice;
+                updatedQty = totalQty;
+                updatedPrice = totalPrice;
                 index = shoppingCart.findIndex((cart) => cart.ProductID === action.id);
                 shoppingCart[index] = product;
                 return {
@@ -82,7 +82,7 @@ export const CartReducer = (state, action) => {
                     totalQty: updatedQty,
                 };
             } else {
-                product.qty = ++product.qty;
+                product.qty++;
                 product.TotalProductPrice = product.qty * product.ProductPrice;
                 updatedQty = totalQty + 1;
                 updatedPrice = totalPrice + product.ProductPrice;
@@ -98,7 +98,7 @@ export const CartReducer = (state, action) => {
         case "DEC":
             product = action.cart;
             if (product.qty > 1) {
-                product.qty = product.qty - 1;
+                product.qty--;
                 product.TotalProductPrice = product.qty * product.ProductPrice;
                 updatedPrice = totalPrice - product.ProductPrice;
                 updatedQty = totalQty - 1;
@@ -126,29 +126,20 @@ export const CartReducer = (state, action) => {
 
         case "EMPTY":
             product = action.cart;
-            stockQty = action.stock - product.qty
+            stockQty = action.stock - product.qty;
             updateStock(action.id, stockQty).then(() => {
                 console.log(action.stock);
                 console.log(stockQty);
                 console.log(action.id);
-                if (stockQty > 0) {
-                    return {
-                        shoppingCart: [],
-                        totalPrice: 0,
-                        totalQty: 0,
-                    };
-                } else {
-                    removeItem(action.id).then(() => {
-                        return {
-                            shoppingCart: [],
-                            totalPrice: 0,
-                            totalQty: 0,
-                        };
-                    })
-                    
+                if (stockQty <= 0) {
+                    removeItem(action.id);
                 }
-            })
-            break     
+            });
+            return {
+                shoppingCart: [],
+                totalPrice: 0,
+                totalQty: 0,
+            };
         default:
             return state;
     }

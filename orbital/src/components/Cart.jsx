@@ -11,7 +11,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { ToastContainer } from "react-toastify"
 import "../css/Home.css"
 
-export const Cart = ({ user }) => {
+export const Cart = ({ userName }) => {
     const { shoppingCart, dispatch, totalPrice, totalQty } = useContext(CartContext);
 
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const Cart = ({ user }) => {
 
     return (
         <>
-            <Navbar user={user} />
+            <Navbar user={userName} />
             <>
                 {shoppingCart.length !== 0 && <h1>Cart</h1>}
                 <div className="cart-container">
@@ -43,21 +43,21 @@ export const Cart = ({ user }) => {
                     )}
                     {shoppingCart &&
                         shoppingCart.map((cart) => (
-                            <div className="cart-card" key={cart.id}>
+                            <div className="cart-card" key={cart.ProductID}>
                                 <div className="cart-img">
                                     <img src={cart.ProductImg} alt="not found" />
                                 </div>
-
+                                
                                 <div className="cart-name">{cart.ProductName}</div>
 
-                                <div className="cart-price-orignal">RM {cart.ProductPrice}.00</div>
+                                <div className="cart-price-orignal">$ {cart.ProductPrice}.00</div>
 
                                 <div
                                     className="inc"
                                     onClick={() =>
                                         dispatch({
                                             type: "INC",
-                                            id: cart.id,
+                                            id: cart.ProductID,
                                             stock: cart.ProductStock,
                                             cart,
                                         })
@@ -68,15 +68,15 @@ export const Cart = ({ user }) => {
 
                                 <div className="quantity">{cart.qty}</div>
 
-                                <div className="dec" onClick={() => dispatch({ type: "DEC", id: cart.id, cart })}>
+                                <div className="dec" onClick={() => dispatch({ type: "DEC", id: cart.ProductID, cart })}>
                                     <Icon icon={ic_remove} size={24} />
                                 </div>
 
-                                <div className="cart-price">RM {cart.TotalProductPrice}.00</div>
+                                <div className="cart-price">$ {cart.TotalProductPrice}.00</div>
 
                                 <button
                                     className="delete-btn"
-                                    onClick={() => dispatch({ type: "DELETE", id: cart.id, cart })}
+                                    onClick={() => dispatch({ type: "DELETE", id: cart.ProductID, cart })}
                                 >
                                     <Icon icon={iosTrashOutline} size={24} />
                                 </button>
@@ -99,7 +99,7 @@ export const Cart = ({ user }) => {
                                 style={{ marginTop: 5 + "px" }}
                                 onClick={() => navigate("/cashout")}
                             >
-                                Cash on delivery
+                                Checkout
                             </button>
                         </div>
                     )}

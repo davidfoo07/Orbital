@@ -27,7 +27,6 @@ export class ProductsContextProvider extends React.Component {
 
     state = {
         products: [],
-        loading: true,
     };
 
     componentDidMount() {
@@ -38,7 +37,6 @@ export class ProductsContextProvider extends React.Component {
                 products: [],
             });
             snapshot.forEach((change) => {
-                console.log(change.data().ProductName);
                 var item = change.data();
                 item["ProductID"] = change.id;
                 this.setState((prev) => ({
@@ -46,15 +44,12 @@ export class ProductsContextProvider extends React.Component {
                 }));
             });
         });
-        this.setState({
-            loading: false,
-        });
     }
 
     render() {
         return (
             <ProductsContext.Provider value={{ products: this.state.products }}>
-                {!this.state.loading && this.props.children}
+                {this.props.children}
             </ProductsContext.Provider>
         );
     }

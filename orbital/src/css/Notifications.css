@@ -1,0 +1,16 @@
+.notifications-container {
+    margin: 50px 400px;
+}
+
+.orders-container {
+    padding: 15px 15px;
+    border: solid 1px grey;
+    border-radius: 8px;
+    background-color: azure;
+    cursor: pointer;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    color: black !important;
+}

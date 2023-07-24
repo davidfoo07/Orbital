@@ -6,7 +6,7 @@ import '../css/Home.css'
 import { auth } from '../config/config'
 import { onAuthStateChanged } from 'firebase/auth'
 
-export const Home = ({user}) => {
+export const Home = ({userName}) => {
 
   const navigate = useNavigate()
 
@@ -20,7 +20,7 @@ export const Home = ({user}) => {
 
   return (
     <div className='wrapper'>
-        <Navbar user={user} />
+        <Navbar user={userName} />
         <Products />
     </div>
   )
